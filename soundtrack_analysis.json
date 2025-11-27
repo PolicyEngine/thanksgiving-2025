@@ -1,17 +1,17 @@
 {
-  "overall": "NEEDS IMPROVEMENT",
-  "score": "5/6",
+  "overall": "PASS",
+  "score": "6/6",
   "tests": [
     {
       "test": "warmth",
       "passed": true,
       "details": {
-        "sub_bass": 5.51049504901253,
-        "warm_bass": 27.066671956689813,
-        "warm_mid": 27.39333242933813,
-        "mid": 34.186891443004185,
-        "high_mid": 5.3704229695591685,
-        "high": 0.4721861523961712
+        "sub_bass": 18.26764529362206,
+        "warm_bass": 34.40115915462164,
+        "warm_mid": 17.696368985360063,
+        "mid": 17.185563402728047,
+        "high_mid": 11.697889824178013,
+        "high": 0.7513733394901837
       },
       "checks": {
         "has_warm_bass": true,
@@ -23,10 +23,66 @@
     },
     {
       "test": "smoothness",
-      "passed": false,
+      "passed": true,
       "details": {
-        "harsh_transient_ratio": 0.003048002736210764,
-        "smoothness_score": -0.483043909072876
+        "harsh_transient_ratio": 0.004676879585940261,
+        "attack_time_sec": 3.7438321995464854,
+        "sustain_stability": 0.5670145750045776
       },
       "checks": {
-        "smooth_envelope": 
+        "smooth_envelope": true,
+        "gentle_transitions": true
+      }
+    },
+    {
+      "test": "consonance",
+      "passed": true,
+      "details": {
+        "consonance_ratio": 0.9,
+        "consonant_pairs": 9,
+        "total_pairs": 10
+      },
+      "checks": {
+        "mostly_consonant": true
+      }
+    },
+    {
+      "test": "gentle_dynamics",
+      "passed": true,
+      "details": {
+        "crest_factor_db": 10.355085372924805,
+        "rms_level": 0.3000960052013397,
+        "peak_level": 0.9885860681533813
+      },
+      "checks": {
+        "not_too_flat": true,
+        "not_too_punchy": true,
+        "good_volume": true
+      }
+    },
+    {
+      "test": "melodic_content",
+      "passed": true,
+      "details": {
+        "pitch_changes": 50,
+        "pitch_std": 112.36695366987767
+      },
+      "checks": {
+        "has_melody": true,
+        "not_monotonous": true
+      }
+    },
+    {
+      "test": "fullness",
+      "passed": true,
+      "details": {
+        "active_bands": 39,
+        "fullness_ratio": 1.0
+      },
+      "checks": {
+        "sounds_full": true,
+        "rich_spectrum": true
+      }
+    }
+  ]
+}

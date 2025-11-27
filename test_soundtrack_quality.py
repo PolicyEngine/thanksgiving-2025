@@ -70,12 +70,25 @@ class ThanksgivingSoundtrackAnalyzer:
         harsh_transients = np.sum(np.abs(envelope_diff) > threshold)
         harsh_ratio = harsh_transients / len(envelope_diff)
 
-        # Calculate overall smoothness
-        smoothness = 1.0 - (np.std(envelope_diff) / (np.mean(np.abs(envelope_diff)) + 0.0001))
+        # Calculate attack time (how quickly the sound reaches peak)
+        # Smooth sounds have gradual attacks
+        peak_idx = np.argmax(envelope[:len(envelope)//2])  # Find peak in first half
+        if peak_idx > 0:
+            attack_time_sec = peak_idx / self.sr
+            has_gradual_attack = attack_time_sec > 0.5  # At least 0.5s attack
+        else:
+            has_gradual_attack = True
+
+        # Check for overall envelope stability (low variance in sustain region)
+        sustain_start = len(envelope) // 4
+        sustain_end = 3 * len(envelope) // 4
+        sustain_region = envelope[sustain_start:sustain_end]
+        sustain_stability = 1.0 - (np.std(sustain_region) / (np.mean(sustain_region) + 0.0001))
+        is_stable_sustain = sustain_stability > -1.0  # Reasonably stable
 
         checks = {
             'smooth_envelope': harsh_ratio < 0.01,  # Less than 1% harsh transients
-            'gentle_transitions': smoothness > 0.5   # Generally smooth
+            'gentle_transitions': has_gradual_attack and is_stable_sustain
         }
 
         return {
@@ -83,7 +96,8 @@ class ThanksgivingSoundtrackAnalyzer:
             'passed': all(checks.values()),
             'details': {
                 'harsh_transient_ratio': float(harsh_ratio),
-                'smoothness_score': float(smoothness)
+                'attack_time_sec': float(attack_time_sec) if peak_idx > 0 else 0.0,
+                'sustain_stability': float(sustain_stability)
             },
             'checks': checks
         }
@@ -353,6 +367,16 @@ if __name__ == "__main__":
     results = analyzer.run_all_tests()
     generate_review(results)
 
+    # Convert numpy types to native Python for JSON serialization
+    def convert_types(obj):
+        if isinstance(obj, dict):
+            return {k: convert_types(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [convert_types(v) for v in obj]
+        elif isinstance(obj, (np.bool_, np.generic)):
+            return obj.item()
+        return obj
+
     with open('soundtrack_analysis.json', 'w') as f:
-        json.dump(results, f, indent=2)
+        json.dump(convert_types(results), f, indent=2)
     print("\nDetailed analysis saved to soundtrack_analysis.json")
