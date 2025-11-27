@@ -164,10 +164,61 @@ def create_thanksgiving_soundtrack():
     # Create output array
     total_samples = int(DURATION * SAMPLE_RATE)
     audio = np.zeros(total_samples)
+    t = np.linspace(0, DURATION, total_samples)
+    nyquist = SAMPLE_RATE / 2
+
+    # Layer 0: Ambient fall sounds
+    print("Adding ambient fall sounds...")
+
+    # Gentle wind (filtered noise)
+    wind = np.random.randn(total_samples) * 0.03
+    # Very low-pass for soft whoosh
+    wind_cutoff = 400 / nyquist
+    b_wind, a_wind = signal.butter(3, wind_cutoff, btype='low')
+    wind = signal.filtfilt(b_wind, a_wind, wind)
+    # Slow volume swells
+    wind_swell = 0.5 + 0.5 * np.sin(2 * np.pi * 0.08 * t)  # ~12 second cycle
+    wind *= wind_swell * 0.4
+    audio += wind
+
+    # Rustling leaves (higher filtered noise, intermittent)
+    leaves = np.random.randn(total_samples) * 0.02
+    # Band-pass for papery rustle sound
+    leaves_low = 800 / nyquist
+    leaves_high = 3000 / nyquist
+    b_leaves, a_leaves = signal.butter(2, [leaves_low, leaves_high], btype='band')
+    leaves = signal.filtfilt(b_leaves, a_leaves, leaves)
+    # Intermittent rustles
+    rustle_times = [1.5, 4.0, 7.5, 10.0]
+    leaves_env = np.zeros(total_samples)
+    for rt in rustle_times:
+        start = int(rt * SAMPLE_RATE)
+        rustle_dur = int(0.8 * SAMPLE_RATE)
+        if start + rustle_dur < total_samples:
+            rustle_shape = np.exp(-3 * np.linspace(0, 1, rustle_dur))
+            leaves_env[start:start+rustle_dur] = rustle_shape
+    leaves *= leaves_env * 0.3
+    audio += leaves
+
+    # Distant birds (simple chirps using sine sweeps)
+    bird_times = [2.5, 6.0, 9.5]
+    for bt in bird_times:
+        start = int(bt * SAMPLE_RATE)
+        chirp_dur = int(0.15 * SAMPLE_RATE)
+        if start + chirp_dur < total_samples:
+            chirp_t = np.linspace(0, 0.15, chirp_dur)
+            # Descending chirp
+            chirp_freq = 2500 - 800 * chirp_t / 0.15
+            chirp = np.sin(2 * np.pi * chirp_freq * chirp_t)
+            chirp *= np.exp(-8 * chirp_t)  # Quick decay
+            audio[start:start+chirp_dur] += chirp * 0.015
+            # Second chirp slightly after
+            start2 = start + int(0.2 * SAMPLE_RATE)
+            if start2 + chirp_dur < total_samples:
+                audio[start2:start2+chirp_dur] += chirp * 0.012
 
     # Layer 1: Very subtle low bass foundation (not a "hum" - just warmth)
     print("Adding subtle bass foundation...")
-    t = np.linspace(0, DURATION, total_samples)
     # Very low, barely audible bass notes that follow the chord roots
     bass_foundation = np.zeros_like(t)
     bass_times = [(0.5, 65.41), (3.0, 82.41), (5.5, 65.41), (8.0, 98.00), (10.3, 65.41)]  # C2, E2, C2, G2, C2
@@ -226,7 +277,6 @@ def create_thanksgiving_soundtrack():
     print("Applying warmth processing...")
 
     # Boost low frequencies for warmth (bass shelf)
-    nyquist = SAMPLE_RATE / 2
     bass_cutoff = 300 / nyquist
     b_bass, a_bass = signal.butter(2, bass_cutoff, btype='low')
     bass_boost = signal.filtfilt(b_bass, a_bass, audio)
