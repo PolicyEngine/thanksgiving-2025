@@ -6,12 +6,12 @@
       "test": "warmth",
       "passed": true,
       "details": {
-        "sub_bass": 18.26764529362206,
-        "warm_bass": 34.40115915462164,
-        "warm_mid": 17.696368985360063,
-        "mid": 17.185563402728047,
-        "high_mid": 11.697889824178013,
-        "high": 0.7513733394901837
+        "sub_bass": 0.41297482663001955,
+        "warm_bass": 50.23460948004126,
+        "warm_mid": 34.25417965227698,
+        "mid": 14.09550080853884,
+        "high_mid": 0.9556244321574731,
+        "high": 0.04711080035542848
       },
       "checks": {
         "has_warm_bass": true,
@@ -25,9 +25,9 @@
       "test": "smoothness",
       "passed": true,
       "details": {
-        "harsh_transient_ratio": 0.004676879585940261,
-        "attack_time_sec": 3.7438321995464854,
-        "sustain_stability": 0.5670145750045776
+        "harsh_transient_ratio": 0.0010411962229709428,
+        "attack_time_sec": 3.8673015873015872,
+        "sustain_stability": 0.4733109474182129
       },
       "checks": {
         "smooth_envelope": true,
@@ -38,9 +38,9 @@
       "test": "consonance",
       "passed": true,
       "details": {
-        "consonance_ratio": 0.9,
-        "consonant_pairs": 9,
-        "total_pairs": 10
+        "consonance_ratio": 1.0,
+        "consonant_pairs": 45,
+        "total_pairs": 45
       },
       "checks": {
         "mostly_consonant": true
@@ -50,9 +50,9 @@
       "test": "gentle_dynamics",
       "passed": true,
       "details": {
-        "crest_factor_db": 10.355085372924805,
-        "rms_level": 0.3000960052013397,
-        "peak_level": 0.9885860681533813
+        "crest_factor_db": 12.703944206237793,
+        "rms_level": 0.19688238203525543,
+        "peak_level": 0.8499709963798523
       },
       "checks": {
         "not_too_flat": true,
@@ -64,8 +64,8 @@
       "test": "melodic_content",
       "passed": true,
       "details": {
-        "pitch_changes": 50,
-        "pitch_std": 112.36695366987767
+        "pitch_changes": 46,
+        "pitch_std": 66.97506005283633
       },
       "checks": {
         "has_melody": true,

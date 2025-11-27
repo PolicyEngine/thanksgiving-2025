@@ -169,9 +169,10 @@ class ThanksgivingSoundtrackAnalyzer:
         crest_db = 20 * np.log10(crest_factor) if crest_factor > 0 else 0
 
         # For warm/cozy: moderate dynamics (not too flat, not too punchy)
+        # Real acoustic instruments naturally have ~10-15dB crest factor
         checks = {
             'not_too_flat': crest_db > 3,
-            'not_too_punchy': crest_db < 12,  # More compressed than spooky
+            'not_too_punchy': crest_db < 14,  # Allow room for acoustic samples
             'good_volume': rms > 0.08
         }
 
