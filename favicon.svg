@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Turkey tail feathers -->
+  <ellipse cx="50" cy="45" rx="35" ry="40" fill="#8B4513"/>
+  <ellipse cx="40" cy="35" rx="10" ry="25" fill="#D2691E"/>
+  <ellipse cx="55" cy="28" rx="9" ry="28" fill="#FF8C00"/>
+  <ellipse cx="70" cy="35" rx="8" ry="24" fill="#B8860B"/>
+  <ellipse cx="30" cy="40" rx="8" ry="22" fill="#CD853F"/>
+  <!-- Body -->
+  <ellipse cx="50" cy="65" rx="20" ry="18" fill="#8B4513"/>
+  <!-- Head -->
+  <circle cx="50" cy="85" r="10" fill="#8B4513"/>
+  <!-- Beak -->
+  <path d="M50,88 L58,92 L50,96 Z" fill="#FFD700"/>
+  <!-- Wattle -->
+  <ellipse cx="47" cy="92" rx="3" ry="5" fill="#FF4500"/>
+  <!-- Eye -->
+  <circle cx="53" cy="83" r="2" fill="#000"/>
+</svg>
