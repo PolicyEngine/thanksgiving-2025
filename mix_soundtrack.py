@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Master script: Mix all layers into a warm, pleasant soundtrack."""
+"""Master script: Mix all layers into a warm, cozy Thanksgiving soundtrack."""
 
 import numpy as np
 from scipy.io import wavfile
@@ -11,11 +11,12 @@ import os
 os.chdir(Path(__file__).parent)
 
 # Generate all layers
-print("Generating warm soundtrack layers...")
-subprocess.run(['python3', 'generate_bass_layer.py'], check=True)
-subprocess.run(['python3', 'generate_melody_layer.py'], check=True)
-subprocess.run(['python3', 'generate_atmosphere_layer.py'], check=True)
-subprocess.run(['python3', 'generate_effects_layer.py'], check=True)
+print("Generating warm Thanksgiving soundtrack...")
+venv_python = Path(__file__).parent / '.venv' / 'bin' / 'python3'
+subprocess.run([str(venv_python), 'generate_bass_layer.py'], check=True)
+subprocess.run([str(venv_python), 'generate_melody_layer.py'], check=True)
+subprocess.run([str(venv_python), 'generate_atmosphere_layer.py'], check=True)
+subprocess.run([str(venv_python), 'generate_effects_layer.py'], check=True)
 
 print("\nMixing layers...")
 
@@ -31,16 +32,20 @@ melody = melody.astype(np.float32) / 32767
 atmosphere = atmosphere.astype(np.float32) / 32767
 effects = effects.astype(np.float32) / 32767
 
-# Mix - balanced and warm
+# Boost bass warmth with gentle low-shelf
+b_ls, a_ls = signal.butter(2, 300/(sr1/2), btype='low')
+bass_warm = signal.filtfilt(b_ls, a_ls, bass) * 0.3 + bass * 0.7
+
+# Mix - emphasize warmth (bass and atmosphere)
 mixed = (
-    0.35 * bass +         # Warm pad foundation
-    0.30 * melody +       # Gentle melody
-    0.25 * atmosphere +   # Soft ambience
-    0.15 * effects        # Light chime accents
+    0.40 * bass_warm +      # Strong warm bass foundation
+    0.25 * melody +         # Gentle melody
+    0.30 * atmosphere +     # Rich atmosphere
+    0.12 * effects          # Light chime accents
 )
 
-# Gentle compression
-threshold = 0.4
+# Gentle compression for smooth, cozy sound
+threshold = 0.35
 ratio = 2.0
 compressed = np.copy(mixed)
 over_threshold = np.abs(compressed) > threshold
@@ -48,13 +53,17 @@ compressed[over_threshold] = np.sign(compressed[over_threshold]) * (
     threshold + (np.abs(compressed[over_threshold]) - threshold) / ratio
 )
 
+# Gentle high-cut for warmth (remove any harshness)
+b_lp, a_lp = signal.butter(2, 8000/(sr1/2), btype='low')
+mixed = signal.filtfilt(b_lp, a_lp, compressed)
+
 # Normalize
-mixed = compressed / np.max(np.abs(compressed)) * 0.75
+mixed = mixed / np.max(np.abs(mixed)) * 0.78
 
 # Smooth fade in/out for looping
-fade_samples = int(1.5 * sr1)
-fade_in = np.linspace(0, 1, fade_samples) ** 1.5
-fade_out = np.linspace(1, 0, fade_samples) ** 1.5
+fade_samples = int(2.0 * sr1)
+fade_in = np.linspace(0, 1, fade_samples) ** 2
+fade_out = np.linspace(1, 0, fade_samples) ** 2
 mixed[:fade_samples] *= fade_in
 mixed[-fade_samples:] *= fade_out
 
@@ -78,40 +87,12 @@ result = subprocess.run(mp3_cmd, capture_output=True, text=True)
 if result.returncode == 0:
     mp3_size = Path('thanksgiving-soundtrack.mp3').stat().st_size / 1024
     print(f"MP3 created: {mp3_size:.0f} KB")
-else:
-    print(f"MP3 conversion note: {result.stderr}")
 
-# Combine with video if available
-video_input = Path.home() / "Desktop" / "thanksgiving-policyengine-silent.mp4"
-video_output = Path.home() / "Desktop" / "thanksgiving-policyengine-final.mp4"
-
-if video_input.exists():
-    print("\nCombining with video...")
-    ffmpeg_cmd = [
-        'ffmpeg', '-y',
-        '-i', str(video_input),
-        '-i', 'thanksgiving-soundtrack-final.wav',
-        '-c:v', 'copy',
-        '-c:a', 'aac',
-        '-b:a', '320k',
-        '-shortest',
-        str(video_output)
-    ]
-
-    result = subprocess.run(ffmpeg_cmd, capture_output=True, text=True)
-    if result.returncode == 0:
-        size_mb = video_output.stat().st_size / 1024 / 1024
-        print(f"Final video: {video_output}")
-        print(f"File size: {size_mb:.1f} MB")
-        subprocess.run(['open', '-a', 'QuickTime Player', str(video_output)])
-    else:
-        print(f"Video error: {result.stderr}")
-else:
-    print(f"\nTo create final video, save screen recording to:")
-    print(f"  {video_input}")
-
-print("\nHappy Thanksgiving!")
+print("\nRunning quality tests...")
+subprocess.run(['python3', 'test_soundtrack_quality.py'], check=False)
 
 # Cleanup
 for f in ['bass_layer.wav', 'melody_layer.wav', 'atmosphere_layer.wav', 'effects_layer.wav']:
     Path(f).unlink(missing_ok=True)
+
+print("\nHappy Thanksgiving!")

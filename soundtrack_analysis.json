@@ -1,0 +1,32 @@
+{
+  "overall": "NEEDS IMPROVEMENT",
+  "score": "5/6",
+  "tests": [
+    {
+      "test": "warmth",
+      "passed": true,
+      "details": {
+        "sub_bass": 5.51049504901253,
+        "warm_bass": 27.066671956689813,
+        "warm_mid": 27.39333242933813,
+        "mid": 34.186891443004185,
+        "high_mid": 5.3704229695591685,
+        "high": 0.4721861523961712
+      },
+      "checks": {
+        "has_warm_bass": true,
+        "has_body": true,
+        "not_harsh": true,
+        "gentle_highs": true,
+        "warm_ratio": true
+      }
+    },
+    {
+      "test": "smoothness",
+      "passed": false,
+      "details": {
+        "harsh_transient_ratio": 0.003048002736210764,
+        "smoothness_score": -0.483043909072876
+      },
+      "checks": {
+        "smooth_envelope": 
