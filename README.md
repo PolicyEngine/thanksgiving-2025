@@ -1,9 +1,9 @@
-# PolicyEngine Thanksgiving 2024
+# PolicyEngine Thanksgiving 2025
 
 Happy Thanksgiving from PolicyEngine!
 
 ## Live Demo
-[View the warm animated logo](https://policyengine.github.io/thanksgiving-2024/)
+[View the warm animated logo](https://policyengine.github.io/thanksgiving-2025/)
 
 ## What's This?
 
@@ -26,14 +26,10 @@ A Thanksgiving-themed version of the PolicyEngine logo featuring:
 ## Soundtrack
 
 The warm version includes a custom-composed cozy Thanksgiving soundtrack with:
-- Warm bass foundation with gentle fireplace undertones
-- Wind chimes in pentatonic scale
-- Gentle piano arpeggios
-- Autumn breeze sounds
-- Leaves rustling
-- Distant turkey gobbles
-- Gathering sounds (gentle clinking, footsteps)
-- Warm room tone
+- Soft C major pad foundation
+- Gentle pentatonic melody (C-D-E-G-C)
+- Warm F major 7 ambient texture
+- Light bell chimes
 
 ## Colors
 
