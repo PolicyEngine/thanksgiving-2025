@@ -6,12 +6,12 @@
       "test": "warmth",
       "passed": true,
       "details": {
-        "sub_bass": 0.10597928107193544,
-        "warm_bass": 35.98155723772991,
-        "warm_mid": 36.59915827781063,
-        "mid": 24.982468811792966,
-        "high_mid": 2.285049354329044,
-        "high": 0.04578703726550751
+        "sub_bass": 0.13409281256233854,
+        "warm_bass": 34.24417577212416,
+        "warm_mid": 35.906576635680004,
+        "mid": 27.22509620940219,
+        "high_mid": 2.444310338447995,
+        "high": 0.045748231783316405
       },
       "checks": {
         "has_warm_bass": true,
@@ -25,9 +25,9 @@
       "test": "smoothness",
       "passed": true,
       "details": {
-        "harsh_transient_ratio": 0.004964106130208107,
-        "attack_time_sec": 3.8672108843537414,
-        "sustain_stability": 0.46924495697021484
+        "harsh_transient_ratio": 0.006139467383725215,
+        "attack_time_sec": 3.867528344671202,
+        "sustain_stability": 0.4525052309036255
       },
       "checks": {
         "smooth_envelope": true,
@@ -50,8 +50,8 @@
       "test": "gentle_dynamics",
       "passed": true,
       "details": {
-        "crest_factor_db": 13.184126853942871,
-        "rms_level": 0.18629354238510132,
+        "crest_factor_db": 13.676475524902344,
+        "rms_level": 0.17602743208408356,
         "peak_level": 0.8499709963798523
       },
       "checks": {
@@ -65,7 +65,7 @@
       "passed": true,
       "details": {
         "pitch_changes": 46,
-        "pitch_std": 91.38899987594257
+        "pitch_std": 70.71419916027565
       },
       "checks": {
         "has_melody": true,

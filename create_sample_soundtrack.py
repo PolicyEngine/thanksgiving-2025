@@ -171,35 +171,42 @@ def create_thanksgiving_soundtrack():
     pad = create_warm_pad(DURATION, pad_freqs)
     audio[:len(pad)] += pad
 
-    # Layer 2: Piano melody using real samples
-    # Simple "coming home" melody: G - A - C - B - A - G
-    print("Adding piano melody...")
-    melody = [
-        (0.5, 'G4', 2.0, 0.85),
-        (3.0, 'A4', 1.8, 0.8),
-        (5.0, 'C5', 2.5, 0.95),   # Home note, emphasized
-        (7.5, 'B4', 1.5, 0.75),
-        (9.2, 'A4', 1.3, 0.7),
-        (10.8, 'G4', 1.2, 0.8),
+    # Layer 2: Piano chords using real samples
+    # Warm chord progression with melody note on top
+    print("Adding piano chords...")
+
+    # Chord definitions: (time, [(note, velocity), ...], duration)
+    chords = [
+        # C major - opening warmth
+        (0.3, [('C3', 0.5), ('E3', 0.45), ('G3', 0.45), ('C4', 0.5), ('G4', 0.8)], 2.8),
+        # Am7 - gentle movement
+        (3.3, [('C3', 0.45), ('E3', 0.4), ('G3', 0.4), ('A4', 0.75)], 2.2),
+        # F major - warm home feeling
+        (5.7, [('C3', 0.5), ('E3', 0.45), ('C4', 0.5), ('E4', 0.5), ('C5', 0.9)], 2.8),
+        # G major - gentle tension
+        (8.7, [('G3', 0.5), ('D4', 0.45), ('G4', 0.45), ('B4', 0.75)], 1.8),
+        # C major - resolve
+        (10.7, [('C3', 0.55), ('E3', 0.5), ('G3', 0.45), ('C4', 0.5), ('G4', 0.8)], 1.5),
     ]
 
-    for time, note, dur, vel in melody:
-        if note in samples:
-            start = int(time * SAMPLE_RATE)
-            sample = samples[note].copy()
-            sample = apply_envelope(sample, attack=0.01, decay=0.3, sustain=0.6,
-                                   release=0.8, duration=dur)
-            sample *= vel
+    for time, chord_notes, dur in chords:
+        for i, (note, vel) in enumerate(chord_notes):
+            if note in samples:
+                # Slight strum/roll effect - each note slightly delayed
+                strum_delay = i * 0.025  # 25ms between notes for gentle roll
+                start = int((time + strum_delay) * SAMPLE_RATE)
+                sample = samples[note].copy()
+                sample = apply_envelope(sample, attack=0.01, decay=0.5, sustain=0.5,
+                                       release=1.2, duration=dur)
+                sample *= vel
 
-            end = min(start + len(sample), total_samples)
-            audio[start:end] += sample[:end - start]
+                end = min(start + len(sample), total_samples)
+                audio[start:end] += sample[:end - start]
 
-    # Layer 3: Lower piano notes for warmth
-    print("Adding bass piano notes...")
+    # Layer 3: Skip separate bass - it's now in the chords
+    print("Chords include bass notes...")
     bass_notes = [
-        (0.0, 'C3', 4.0, 0.4),
-        (4.0, 'E3', 3.5, 0.35),
-        (8.0, 'C3', 4.0, 0.4),
+        # Empty - bass is integrated into chords above
     ]
 
     for time, note, dur, vel in bass_notes:
