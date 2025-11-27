@@ -165,100 +165,97 @@ def create_thanksgiving_soundtrack():
     total_samples = int(DURATION * SAMPLE_RATE)
     audio = np.zeros(total_samples)
 
-    # Layer 1: Warm pad underneath (synthesized)
-    print("Creating warm pad layer...")
-    pad_freqs = [130.81, 164.81, 196.00]  # C3, E3, G3
-    pad = create_warm_pad(DURATION, pad_freqs)
-    audio[:len(pad)] += pad
+    # Layer 1: Very subtle low bass foundation (not a "hum" - just warmth)
+    print("Adding subtle bass foundation...")
+    t = np.linspace(0, DURATION, total_samples)
+    # Very low, barely audible bass notes that follow the chord roots
+    bass_foundation = np.zeros_like(t)
+    bass_times = [(0.5, 65.41), (3.0, 82.41), (5.5, 65.41), (8.0, 98.00), (10.3, 65.41)]  # C2, E2, C2, G2, C2
+    for bass_time, bass_freq in bass_times:
+        start = int(bass_time * SAMPLE_RATE)
+        bass_dur = 2.5
+        bass_samples = int(bass_dur * SAMPLE_RATE)
+        if start + bass_samples < len(bass_foundation):
+            bass_t = np.linspace(0, bass_dur, bass_samples)
+            # Pure sine, very soft
+            bass_note = np.sin(2 * np.pi * bass_freq * bass_t)
+            # Slow attack and release
+            bass_env = np.ones_like(bass_t)
+            attack = int(0.3 * SAMPLE_RATE)
+            release = int(0.8 * SAMPLE_RATE)
+            bass_env[:attack] = np.linspace(0, 1, attack) ** 2
+            bass_env[-release:] = np.linspace(1, 0, release) ** 2
+            bass_foundation[start:start+bass_samples] += bass_note * bass_env * 0.15
+    audio += bass_foundation
 
     # Layer 2: Piano chords using real samples
     # Warm chord progression with melody note on top
     print("Adding piano chords...")
 
     # Chord definitions: (time, [(note, velocity), ...], duration)
+    # More flowing, overlapping progression
     chords = [
-        # C major - opening warmth
-        (0.3, [('C3', 0.5), ('E3', 0.45), ('G3', 0.45), ('C4', 0.5), ('G4', 0.8)], 2.8),
-        # Am7 - gentle movement
-        (3.3, [('C3', 0.45), ('E3', 0.4), ('G3', 0.4), ('A4', 0.75)], 2.2),
-        # F major - warm home feeling
-        (5.7, [('C3', 0.5), ('E3', 0.45), ('C4', 0.5), ('E4', 0.5), ('C5', 0.9)], 2.8),
-        # G major - gentle tension
-        (8.7, [('G3', 0.5), ('D4', 0.45), ('G4', 0.45), ('B4', 0.75)], 1.8),
-        # C major - resolve
-        (10.7, [('C3', 0.55), ('E3', 0.5), ('G3', 0.45), ('C4', 0.5), ('G4', 0.8)], 1.5),
+        # C major - gentle opening
+        (0.5, [('C3', 0.4), ('G3', 0.35), ('C4', 0.4), ('E4', 0.5)], 3.2),
+        # C/E - bass moves up smoothly
+        (3.0, [('E3', 0.35), ('G3', 0.35), ('C4', 0.4), ('G4', 0.55)], 2.8),
+        # F major - warmth
+        (5.5, [('C3', 0.4), ('C4', 0.4), ('E4', 0.35), ('A4', 0.5)], 2.8),
+        # G7 - gentle tension leading home
+        (8.0, [('G3', 0.4), ('D4', 0.35), ('G4', 0.45), ('B4', 0.5)], 2.5),
+        # C major - final resolve (let it ring)
+        (10.3, [('C3', 0.45), ('E3', 0.4), ('G3', 0.35), ('C4', 0.5)], 2.0),
     ]
 
     for time, chord_notes, dur in chords:
         for i, (note, vel) in enumerate(chord_notes):
             if note in samples:
-                # Slight strum/roll effect - each note slightly delayed
-                strum_delay = i * 0.025  # 25ms between notes for gentle roll
+                # Very gentle roll - almost simultaneous but not quite
+                strum_delay = i * 0.015  # 15ms between notes - subtler
                 start = int((time + strum_delay) * SAMPLE_RATE)
                 sample = samples[note].copy()
-                sample = apply_envelope(sample, attack=0.01, decay=0.5, sustain=0.5,
-                                       release=1.2, duration=dur)
+                # Longer decay and release for more legato feel
+                sample = apply_envelope(sample, attack=0.02, decay=0.8, sustain=0.4,
+                                       release=1.5, duration=dur + 0.5)  # Extra ring time
                 sample *= vel
 
                 end = min(start + len(sample), total_samples)
                 audio[start:end] += sample[:end - start]
 
-    # Layer 3: Skip separate bass - it's now in the chords
-    print("Chords include bass notes...")
-    bass_notes = [
-        # Empty - bass is integrated into chords above
-    ]
-
-    for time, note, dur, vel in bass_notes:
-        if note in samples:
-            start = int(time * SAMPLE_RATE)
-            sample = samples[note].copy()
-            sample = apply_envelope(sample, attack=0.02, decay=0.5, sustain=0.5,
-                                   release=1.5, duration=dur)
-            sample *= vel
-
-            end = min(start + len(sample), total_samples)
-            audio[start:end] += sample[:end - start]
-
-    # Layer 4: Gentle high notes for sparkle
-    print("Adding gentle high notes...")
-    high_notes = [
-        (2.0, 'E4', 1.5, 0.25),
-        (6.5, 'D4', 1.5, 0.25),
-    ]
-
-    for time, note, dur, vel in high_notes:
-        if note in samples:
-            start = int(time * SAMPLE_RATE)
-            sample = samples[note].copy()
-            sample = apply_envelope(sample, attack=0.05, decay=0.3, sustain=0.4,
-                                   release=0.6, duration=dur)
-            sample *= vel
-
-            end = min(start + len(sample), total_samples)
-            audio[start:end] += sample[:end - start]
-
     # Post-processing
     print("Applying warmth processing...")
 
-    # Gentle low-pass to remove harshness
+    # Boost low frequencies for warmth (bass shelf)
     nyquist = SAMPLE_RATE / 2
-    cutoff = 5000 / nyquist
+    bass_cutoff = 300 / nyquist
+    b_bass, a_bass = signal.butter(2, bass_cutoff, btype='low')
+    bass_boost = signal.filtfilt(b_bass, a_bass, audio)
+    audio = audio + bass_boost * 0.8  # Add bass warmth
+
+    # Gentle low-pass to remove harshness
+    cutoff = 6000 / nyquist
     b, a = signal.butter(2, cutoff, btype='low')
     audio = signal.filtfilt(b, a, audio)
 
-    # Soft compression to reduce dynamic range (more gentle feel)
-    # Simple soft-knee compression
-    threshold = 0.3
-    ratio = 3.0
+    # Heavy compression for smooth, even dynamics
+    threshold = 0.15
+    ratio = 6.0
     audio_sign = np.sign(audio)
     audio_abs = np.abs(audio)
     mask = audio_abs > threshold
     audio_abs[mask] = threshold + (audio_abs[mask] - threshold) / ratio
     audio = audio_sign * audio_abs
 
+    # Second pass compression
+    threshold2 = 0.25
+    ratio2 = 3.0
+    audio_abs = np.abs(audio)
+    mask = audio_abs > threshold2
+    audio_abs[mask] = threshold2 + (audio_abs[mask] - threshold2) / ratio2
+    audio = np.sign(audio) * audio_abs
+
     # Soft saturation for tape-like warmth
-    audio = np.tanh(audio * 2.0) / 2.0
+    audio = np.tanh(audio * 2.5) / 2.5
 
     # Long fade in/out
     fade_in = int(2.0 * SAMPLE_RATE)
