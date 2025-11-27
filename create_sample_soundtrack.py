@@ -126,7 +126,7 @@ def create_warm_pad(duration, freqs):
     release = int(2.5 * SAMPLE_RATE)
     audio[-release:] *= np.linspace(1, 0, release) ** 2
 
-    return audio * 0.3
+    return audio * 0.12  # Reduced from 0.3 - keep pad subtle under piano
 
 
 def create_thanksgiving_soundtrack():
@@ -175,12 +175,12 @@ def create_thanksgiving_soundtrack():
     # Simple "coming home" melody: G - A - C - B - A - G
     print("Adding piano melody...")
     melody = [
-        (0.5, 'G4', 2.0, 0.6),
-        (3.0, 'A4', 1.8, 0.55),
-        (5.0, 'C5', 2.5, 0.7),   # Home note, emphasized
-        (7.5, 'B4', 1.5, 0.5),
-        (9.2, 'A4', 1.3, 0.45),
-        (10.8, 'G4', 1.2, 0.55),
+        (0.5, 'G4', 2.0, 0.85),
+        (3.0, 'A4', 1.8, 0.8),
+        (5.0, 'C5', 2.5, 0.95),   # Home note, emphasized
+        (7.5, 'B4', 1.5, 0.75),
+        (9.2, 'A4', 1.3, 0.7),
+        (10.8, 'G4', 1.2, 0.8),
     ]
 
     for time, note, dur, vel in melody:
