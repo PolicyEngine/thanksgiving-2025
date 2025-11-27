@@ -31,56 +31,165 @@
             align-items: center;
         }
 
-        /* Warm glow effect */
+        /* Warm glow effect - more dynamic */
         .warm-glow {
             position: absolute;
             width: 100%;
             height: 100%;
-            opacity: 0.4;
+            opacity: 0.5;
             background:
-                radial-gradient(circle at 50% 60%, rgba(255, 140, 0, 0.25) 0%, transparent 40%),
-                radial-gradient(circle at 20% 80%, rgba(139, 69, 19, 0.2) 0%, transparent 30%),
-                radial-gradient(circle at 80% 80%, rgba(205, 133, 63, 0.2) 0%, transparent 30%);
-            animation: glowPulse 6s infinite ease-in-out;
+                radial-gradient(ellipse 80% 50% at 50% 70%, rgba(255, 140, 0, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 30% 85%, rgba(255, 100, 50, 0.25) 0%, transparent 35%),
+                radial-gradient(circle at 70% 85%, rgba(255, 100, 50, 0.25) 0%, transparent 35%);
+            animation: glowPulse 4s infinite ease-in-out;
         }
 
         @keyframes glowPulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.02); }
         }
 
-        /* Falling leaves */
+        /* Vignette effect */
+        .vignette {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%);
+            pointer-events: none;
+            z-index: 8;
+        }
+
+        /* Floating golden particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(255, 200, 100, 0.9) 0%, rgba(255, 140, 0, 0) 70%);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-400px) translateX(30px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Fireplace flicker overlay */
+        .fireplace-flicker {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to top, rgba(255, 100, 30, 0.15) 0%, transparent 100%);
+            animation: flicker 0.15s infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.3; }
+            25% { opacity: 0.35; }
+            50% { opacity: 0.25; }
+            75% { opacity: 0.4; }
+            100% { opacity: 0.3; }
+        }
+
+        /* Falling leaves - more realistic flutter */
         .leaf {
             position: absolute;
             width: 30px;
             height: 30px;
-            opacity: 0.7;
-            animation: leafFall linear infinite;
+            opacity: 0;
+            animation: leafFall linear infinite, leafSway ease-in-out infinite, leafSpin linear infinite;
         }
 
-        .leaf:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
-        .leaf:nth-child(2) { left: 25%; animation-duration: 10s; animation-delay: 2s; }
-        .leaf:nth-child(3) { left: 40%; animation-duration: 9s; animation-delay: 4s; }
-        .leaf:nth-child(4) { left: 55%; animation-duration: 11s; animation-delay: 1s; }
-        .leaf:nth-child(5) { left: 70%; animation-duration: 8s; animation-delay: 3s; }
-        .leaf:nth-child(6) { left: 85%; animation-duration: 10s; animation-delay: 5s; }
-        .leaf:nth-child(7) { left: 15%; animation-duration: 9s; animation-delay: 6s; }
-        .leaf:nth-child(8) { left: 60%; animation-duration: 12s; animation-delay: 0.5s; }
+        .leaf:nth-child(1) { left: 8%; animation-duration: 10s, 2s, 4s; animation-delay: 0s; }
+        .leaf:nth-child(2) { left: 22%; animation-duration: 12s, 2.5s, 5s; animation-delay: 1.5s; }
+        .leaf:nth-child(3) { left: 35%; animation-duration: 11s, 1.8s, 3.5s; animation-delay: 3s; }
+        .leaf:nth-child(4) { left: 48%; animation-duration: 13s, 2.2s, 4.5s; animation-delay: 0.8s; }
+        .leaf:nth-child(5) { left: 62%; animation-duration: 10s, 2.8s, 5.5s; animation-delay: 2.5s; }
+        .leaf:nth-child(6) { left: 75%; animation-duration: 12s, 2s, 4s; animation-delay: 4s; }
+        .leaf:nth-child(7) { left: 88%; animation-duration: 11s, 2.3s, 3.8s; animation-delay: 5.5s; }
+        .leaf:nth-child(8) { left: 52%; animation-duration: 14s, 2.6s, 6s; animation-delay: 0.3s; }
+        .leaf:nth-child(9) { left: 18%; animation-duration: 11s, 1.9s, 4.2s; animation-delay: 2s; }
+        .leaf:nth-child(10) { left: 82%; animation-duration: 13s, 2.4s, 5.2s; animation-delay: 3.5s; }
 
         @keyframes leafFall {
             0% {
-                top: -50px;
-                transform: rotate(0deg) translateX(0);
+                top: -60px;
                 opacity: 0;
             }
-            10% {
-                opacity: 0.8;
+            5% {
+                opacity: 0.85;
+            }
+            95% {
+                opacity: 0.7;
             }
             100% {
                 top: 700px;
-                transform: rotate(360deg) translateX(50px);
                 opacity: 0;
             }
+        }
+
+        @keyframes leafSway {
+            0%, 100% {
+                transform: translateX(0px);
+            }
+            25% {
+                transform: translateX(40px);
+            }
+            75% {
+                transform: translateX(-30px);
+            }
+        }
+
+        @keyframes leafSpin {
+            0% {
+                rotate: 0deg;
+            }
+            25% {
+                rotate: 90deg;
+            }
+            50% {
+                rotate: 180deg;
+            }
+            75% {
+                rotate: 270deg;
+            }
+            100% {
+                rotate: 360deg;
+            }
+        }
+
+        /* Different leaf shapes */
+        .leaf.maple {
+            width: 35px;
+            height: 35px;
+        }
+
+        .leaf.oak {
+            width: 28px;
+            height: 32px;
         }
 
         /* Turkeys */
@@ -240,34 +349,49 @@
         <!-- Warm glow -->
         <div class="warm-glow"></div>
 
+        <!-- Fireplace flicker effect -->
+        <div class="fireplace-flicker"></div>
+
         <!-- Ground -->
         <div class="ground"></div>
 
-        <!-- Falling autumn leaves -->
-        <svg class="leaf" viewBox="0 0 50 50">
-            <path d="M25,5 Q35,15 30,25 Q40,30 35,40 Q25,35 25,45 Q15,40 20,30 Q10,25 15,15 Q20,10 25,5 Z" fill="#D2691E"/>
+        <!-- Floating golden particles -->
+        <div class="particles" id="particles"></div>
+
+        <!-- Falling autumn leaves - maple style -->
+        <svg class="leaf maple" viewBox="0 0 50 50">
+            <path d="M25,2 L28,12 L38,8 L32,18 L45,22 L32,26 L38,38 L28,32 L25,48 L22,32 L12,38 L18,26 L5,22 L18,18 L12,8 L22,12 Z" fill="#D2691E"/>
         </svg>
-        <svg class="leaf" viewBox="0 0 50 50">
-            <path d="M25,5 Q35,15 30,25 Q40,30 35,40 Q25,35 25,45 Q15,40 20,30 Q10,25 15,15 Q20,10 25,5 Z" fill="#CD853F"/>
+        <svg class="leaf oak" viewBox="0 0 50 50">
+            <path d="M25,5 Q30,10 28,15 Q35,15 33,22 Q40,25 35,30 Q38,38 30,38 Q28,45 25,45 Q22,45 20,38 Q12,38 15,30 Q10,25 17,22 Q15,15 22,15 Q20,10 25,5 Z" fill="#CD853F"/>
         </svg>
-        <svg class="leaf" viewBox="0 0 50 50">
-            <path d="M25,5 Q35,15 30,25 Q40,30 35,40 Q25,35 25,45 Q15,40 20,30 Q10,25 15,15 Q20,10 25,5 Z" fill="#B8860B"/>
+        <svg class="leaf maple" viewBox="0 0 50 50">
+            <path d="M25,2 L28,12 L38,8 L32,18 L45,22 L32,26 L38,38 L28,32 L25,48 L22,32 L12,38 L18,26 L5,22 L18,18 L12,8 L22,12 Z" fill="#B8860B"/>
         </svg>
         <svg class="leaf" viewBox="0 0 50 50">
             <path d="M25,5 Q35,15 30,25 Q40,30 35,40 Q25,35 25,45 Q15,40 20,30 Q10,25 15,15 Q20,10 25,5 Z" fill="#8B4513"/>
         </svg>
-        <svg class="leaf" viewBox="0 0 50 50">
-            <path d="M25,5 Q35,15 30,25 Q40,30 35,40 Q25,35 25,45 Q15,40 20,30 Q10,25 15,15 Q20,10 25,5 Z" fill="#FF8C00"/>
+        <svg class="leaf maple" viewBox="0 0 50 50">
+            <path d="M25,2 L28,12 L38,8 L32,18 L45,22 L32,26 L38,38 L28,32 L25,48 L22,32 L12,38 L18,26 L5,22 L18,18 L12,8 L22,12 Z" fill="#FF8C00"/>
         </svg>
-        <svg class="leaf" viewBox="0 0 50 50">
-            <path d="M25,5 Q35,15 30,25 Q40,30 35,40 Q25,35 25,45 Q15,40 20,30 Q10,25 15,15 Q20,10 25,5 Z" fill="#D2691E"/>
+        <svg class="leaf oak" viewBox="0 0 50 50">
+            <path d="M25,5 Q30,10 28,15 Q35,15 33,22 Q40,25 35,30 Q38,38 30,38 Q28,45 25,45 Q22,45 20,38 Q12,38 15,30 Q10,25 17,22 Q15,15 22,15 Q20,10 25,5 Z" fill="#D2691E"/>
         </svg>
         <svg class="leaf" viewBox="0 0 50 50">
             <path d="M25,5 Q35,15 30,25 Q40,30 35,40 Q25,35 25,45 Q15,40 20,30 Q10,25 15,15 Q20,10 25,5 Z" fill="#CD853F"/>
         </svg>
-        <svg class="leaf" viewBox="0 0 50 50">
-            <path d="M25,5 Q35,15 30,25 Q40,30 35,40 Q25,35 25,45 Q15,40 20,30 Q10,25 15,15 Q20,10 25,5 Z" fill="#B8860B"/>
+        <svg class="leaf maple" viewBox="0 0 50 50">
+            <path d="M25,2 L28,12 L38,8 L32,18 L45,22 L32,26 L38,38 L28,32 L25,48 L22,32 L12,38 L18,26 L5,22 L18,18 L12,8 L22,12 Z" fill="#B8860B"/>
         </svg>
+        <svg class="leaf oak" viewBox="0 0 50 50">
+            <path d="M25,5 Q30,10 28,15 Q35,15 33,22 Q40,25 35,30 Q38,38 30,38 Q28,45 25,45 Q22,45 20,38 Q12,38 15,30 Q10,25 17,22 Q15,15 22,15 Q20,10 25,5 Z" fill="#FF6600"/>
+        </svg>
+        <svg class="leaf" viewBox="0 0 50 50">
+            <path d="M25,5 Q35,15 30,25 Q40,30 35,40 Q25,35 25,45 Q15,40 20,30 Q10,25 15,15 Q20,10 25,5 Z" fill="#CC5500"/>
+        </svg>
+
+        <!-- Vignette overlay -->
+        <div class="vignette"></div>
 
         <!-- Corn stalks -->
         <svg class="corn left" viewBox="0 0 80 250" fill="none">
@@ -505,6 +629,33 @@
             toggle.style.display = 'block';
             updateIcon();
         }
+
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.bottom = Math.random() * 30 + '%';
+            particle.style.animationDuration = (8 + Math.random() * 6) + 's';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particle.style.width = (3 + Math.random() * 4) + 'px';
+            particle.style.height = particle.style.width;
+            particlesContainer.appendChild(particle);
+
+            // Remove particle after animation
+            setTimeout(() => {
+                particle.remove();
+            }, 15000);
+        }
+
+        // Create initial particles
+        for (let i = 0; i < 15; i++) {
+            setTimeout(() => createParticle(), i * 300);
+        }
+
+        // Keep creating particles
+        setInterval(createParticle, 800);
     </script>
 </body>
 </html>
