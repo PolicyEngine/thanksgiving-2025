@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""Master script: Mix all layers and combine with video."""
+"""Master script: Mix all layers into a warm, pleasant soundtrack."""
 
 import numpy as np
 from scipy.io import wavfile
 from scipy import signal
 from pathlib import Path
 import subprocess
+import os
+
+os.chdir(Path(__file__).parent)
 
 # Generate all layers
 print("Generating warm soundtrack layers...")
@@ -28,47 +31,41 @@ melody = melody.astype(np.float32) / 32767
 atmosphere = atmosphere.astype(np.float32) / 32767
 effects = effects.astype(np.float32) / 32767
 
-# Apply high-pass filter to non-bass layers (remove everything <200Hz)
-b_hp, a_hp = signal.butter(6, 200/(sr1/2), btype='high')
-melody_filtered = signal.filtfilt(b_hp, a_hp, melody)
-atmosphere_filtered = signal.filtfilt(b_hp, a_hp, atmosphere)
-effects_filtered = signal.filtfilt(b_hp, a_hp, effects)
-
-# Mix with balanced warmth - melody and atmosphere more prominent than Halloween
+# Mix - balanced and warm
 mixed = (
-    0.70 * bass +              # Warm bass foundation
-    0.25 * melody_filtered +   # Melodic chimes and piano
-    0.20 * atmosphere_filtered + # Autumn atmosphere
-    0.15 * effects_filtered    # Turkey and gathering sounds
+    0.35 * bass +         # Warm pad foundation
+    0.30 * melody +       # Gentle melody
+    0.25 * atmosphere +   # Soft ambience
+    0.15 * effects        # Light chime accents
 )
 
-# Apply soft compression to tame dynamic range
-threshold = 0.3
-ratio = 2.5
+# Gentle compression
+threshold = 0.4
+ratio = 2.0
 compressed = np.copy(mixed)
 over_threshold = np.abs(compressed) > threshold
 compressed[over_threshold] = np.sign(compressed[over_threshold]) * (
     threshold + (np.abs(compressed[over_threshold]) - threshold) / ratio
 )
 
-# Master limiting
-mixed = compressed / np.max(np.abs(compressed)) * 0.85
+# Normalize
+mixed = compressed / np.max(np.abs(compressed)) * 0.75
 
-# Apply master fade for looping
-fade_samples = int(2.0 * sr1)
-fade_in = (np.linspace(0, 1, fade_samples)) ** 2
-fade_out = (np.linspace(1, 0, fade_samples)) ** 2
+# Smooth fade in/out for looping
+fade_samples = int(1.5 * sr1)
+fade_in = np.linspace(0, 1, fade_samples) ** 1.5
+fade_out = np.linspace(1, 0, fade_samples) ** 1.5
 mixed[:fade_samples] *= fade_in
 mixed[-fade_samples:] *= fade_out
 
-# Save mixed soundtrack
+# Save
 mixed_int16 = (mixed * 32767).astype(np.int16)
 wavfile.write('thanksgiving-soundtrack-final.wav', sr1, mixed_int16)
 
-size_mb = Path('thanksgiving-soundtrack-final.wav').stat().st_size / 1024 / 1024
-print(f"Mixed soundtrack: {size_mb:.1f} MB")
+size_kb = Path('thanksgiving-soundtrack-final.wav').stat().st_size / 1024
+print(f"Mixed soundtrack: {size_kb:.0f} KB")
 
-# Convert to MP3 for web
+# Convert to MP3
 print("\nConverting to MP3...")
 mp3_cmd = [
     'ffmpeg', '-y',
@@ -106,21 +103,15 @@ if video_input.exists():
         size_mb = video_output.stat().st_size / 1024 / 1024
         print(f"Final video: {video_output}")
         print(f"File size: {size_mb:.1f} MB")
-        print("\nOpening video...")
         subprocess.run(['open', '-a', 'QuickTime Player', str(video_output)])
     else:
-        print(f"Video combination error: {result.stderr}")
+        print(f"Video error: {result.stderr}")
 else:
-    print(f"\nNote: Video file not found at {video_input}")
-    print("To create the final video:")
-    print("1. Record the animation from index.html (5-6 seconds)")
-    print("2. Save as ~/Desktop/thanksgiving-policyengine-silent.mp4")
-    print("3. Re-run this script")
+    print(f"\nTo create final video, save screen recording to:")
+    print(f"  {video_input}")
 
-print("\nDone! Happy Thanksgiving!")
+print("\nHappy Thanksgiving!")
 
-# Cleanup intermediate files
-print("\nCleaning up intermediate files...")
+# Cleanup
 for f in ['bass_layer.wav', 'melody_layer.wav', 'atmosphere_layer.wav', 'effects_layer.wav']:
     Path(f).unlink(missing_ok=True)
-print("Cleanup complete")
