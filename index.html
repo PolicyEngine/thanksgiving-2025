@@ -181,23 +181,47 @@
             }
         }
 
-        /* Turkeys */
+        /* Turkeys - walking across screen */
         .turkey {
             position: absolute;
-            width: 100px;
-            height: 100px;
-            animation: turkeyWalk 8s infinite ease-in-out;
+            width: 80px;
+            height: 80px;
             z-index: 2;
+            bottom: 45px;
         }
 
-        .turkey.left { bottom: 50px; left: 80px; }
-        .turkey.right { bottom: 50px; right: 80px; transform: scaleX(-1); animation-delay: 4s; }
+        .turkey.left {
+            animation: turkeyWalkLeft 20s linear infinite, turkeyBob 0.5s ease-in-out infinite;
+        }
 
-        @keyframes turkeyWalk {
-            0%, 100% { transform: translateX(0) translateY(0); }
-            25% { transform: translateX(10px) translateY(-3px); }
-            50% { transform: translateX(0) translateY(0); }
-            75% { transform: translateX(-10px) translateY(-3px); }
+        .turkey.right {
+            animation: turkeyWalkRight 25s linear infinite, turkeyBob 0.5s ease-in-out infinite;
+            animation-delay: 5s, 0s;
+        }
+
+        @keyframes turkeyWalkLeft {
+            0% { left: -100px; }
+            100% { left: 110%; }
+        }
+
+        @keyframes turkeyWalkRight {
+            0% { right: -100px; transform: scaleX(-1); }
+            100% { right: 110%; transform: scaleX(-1); }
+        }
+
+        @keyframes turkeyBob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .turkey.right {
+            animation: turkeyWalkRight 25s linear infinite, turkeyBobFlipped 0.5s ease-in-out infinite;
+            animation-delay: 5s, 0s;
+        }
+
+        @keyframes turkeyBobFlipped {
+            0%, 100% { transform: scaleX(-1) translateY(0); }
+            50% { transform: scaleX(-1) translateY(-4px); }
         }
 
         /* Pumpkins (harvest theme) */
@@ -304,12 +328,10 @@
             }
 
             .turkey {
-                width: 60px;
-                height: 60px;
+                width: 50px;
+                height: 50px;
+                bottom: 15px;
             }
-
-            .turkey.left { bottom: 20px; left: 10px; }
-            .turkey.right { bottom: 20px; right: 10px; }
 
             .pumpkin {
                 width: 40px;
