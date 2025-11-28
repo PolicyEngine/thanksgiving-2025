@@ -259,11 +259,14 @@
         }
 
         .turkey.left {
+            left: -100px;
             animation: turkeyWalkLeft 20s linear infinite, turkeyBob 0.5s ease-in-out infinite;
         }
 
         .turkey.right {
-            animation: turkeyWalkRight 25s linear infinite, turkeyBob 0.5s ease-in-out infinite;
+            right: -100px;
+            transform: scaleX(-1);
+            animation: turkeyWalkRight 25s linear infinite, turkeyBobFlipped 0.5s ease-in-out infinite;
             animation-delay: 5s, 0s;
         }
 
@@ -280,11 +283,6 @@
         @keyframes turkeyBob {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-4px); }
-        }
-
-        .turkey.right {
-            animation: turkeyWalkRight 25s linear infinite, turkeyBobFlipped 0.5s ease-in-out infinite;
-            animation-delay: 5s, 0s;
         }
 
         @keyframes turkeyBobFlipped {
