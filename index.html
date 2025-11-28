@@ -22,7 +22,11 @@
         .container {
             width: 1200px;
             height: 630px;
-            background: linear-gradient(180deg, #1a0f07 0%, #2d1810 50%, #3d2518 100%);
+            background: linear-gradient(180deg,
+                #0d0a15 0%,
+                #1a0f07 25%,
+                #2d1810 60%,
+                #3d2518 100%);
             position: relative;
             overflow: hidden;
             display: flex;
@@ -112,6 +116,49 @@
             50% { opacity: 0.25; }
             75% { opacity: 0.4; }
             100% { opacity: 0.3; }
+        }
+
+        /* Twinkling stars */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 40%;
+            top: 0;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Distant tree silhouettes */
+        .trees {
+            position: absolute;
+            bottom: 70px;
+            width: 100%;
+            height: 120px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Text animation */
+        .thanksgiving-text {
+            animation: textGlow 3s infinite ease-in-out, textFadeIn 2s ease-out forwards;
+        }
+
+        @keyframes textFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         /* Falling leaves - more realistic flutter */
@@ -357,11 +404,19 @@
 </head>
 <body>
     <div class="container">
+        <!-- Stars in the sky -->
+        <div class="stars" id="stars"></div>
+
         <!-- Warm glow -->
         <div class="warm-glow"></div>
 
         <!-- Fireplace flicker effect -->
         <div class="fireplace-flicker"></div>
+
+        <!-- Distant tree silhouettes -->
+        <svg class="trees" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,120 L0,80 Q30,40 60,80 Q90,20 120,70 Q150,50 180,80 Q210,30 240,75 Q270,45 300,80 Q330,25 360,70 Q390,50 420,85 Q450,35 480,75 Q510,55 540,80 Q570,40 600,70 Q630,50 660,85 Q690,30 720,75 Q750,45 780,80 Q810,35 840,70 Q870,55 900,85 Q930,40 960,75 Q990,50 1020,80 Q1050,30 1080,70 Q1110,55 1140,80 Q1170,45 1200,75 L1200,120 Z" fill="rgba(20,12,8,0.9)"/>
+        </svg>
 
         <!-- Ground -->
         <div class="ground"></div>
@@ -639,6 +694,20 @@
         } else {
             toggle.style.display = 'block';
             updateIcon();
+        }
+
+        // Create twinkling stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 30; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDuration = (2 + Math.random() * 3) + 's';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            star.style.width = (1 + Math.random() * 2) + 'px';
+            star.style.height = star.style.width;
+            starsContainer.appendChild(star);
         }
 
         // Create floating particles
