@@ -1,20 +1,20 @@
 {
-  "overall": "PASS",
-  "score": "6/6",
+  "overall": "NEEDS IMPROVEMENT",
+  "score": "3/6",
   "tests": [
     {
       "test": "warmth",
-      "passed": true,
+      "passed": false,
       "details": {
-        "sub_bass": 0.13409281256233854,
-        "warm_bass": 34.24417577212416,
-        "warm_mid": 35.906576635680004,
-        "mid": 27.22509620940219,
-        "high_mid": 2.444310338447995,
-        "high": 0.045748231783316405
+        "sub_bass": 0.24022921605904396,
+        "warm_bass": 9.401333721951357,
+        "warm_mid": 48.4567741684447,
+        "mid": 37.39796167577646,
+        "high_mid": 4.431939919741156,
+        "high": 0.07176129802729055
       },
       "checks": {
-        "has_warm_bass": true,
+        "has_warm_bass": false,
         "has_body": true,
         "not_harsh": true,
         "gentle_highs": true,
@@ -23,14 +23,14 @@
     },
     {
       "test": "smoothness",
-      "passed": true,
+      "passed": false,
       "details": {
-        "harsh_transient_ratio": 0.006139467383725215,
-        "attack_time_sec": 3.867528344671202,
-        "sustain_stability": 0.4525052309036255
+        "harsh_transient_ratio": 0.013601688589736564,
+        "attack_time_sec": 3.4263718820861677,
+        "sustain_stability": -0.5581425428390503
       },
       "checks": {
-        "smooth_envelope": true,
+        "smooth_envelope": false,
         "gentle_transitions": true
       }
     },
@@ -38,8 +38,8 @@
       "test": "consonance",
       "passed": true,
       "details": {
-        "consonance_ratio": 1.0,
-        "consonant_pairs": 45,
+        "consonance_ratio": 0.6444444444444445,
+        "consonant_pairs": 29,
         "total_pairs": 45
       },
       "checks": {
@@ -48,24 +48,24 @@
     },
     {
       "test": "gentle_dynamics",
-      "passed": true,
+      "passed": false,
       "details": {
-        "crest_factor_db": 13.676475524902344,
-        "rms_level": 0.17602743208408356,
+        "crest_factor_db": 22.512042999267578,
+        "rms_level": 0.06365053355693817,
         "peak_level": 0.8499709963798523
       },
       "checks": {
         "not_too_flat": true,
-        "not_too_punchy": true,
-        "good_volume": true
+        "not_too_punchy": false,
+        "good_volume": false
       }
     },
     {
       "test": "melodic_content",
       "passed": true,
       "details": {
-        "pitch_changes": 46,
-        "pitch_std": 70.71419916027565
+        "pitch_changes": 18,
+        "pitch_std": 104.2048088764231
       },
       "checks": {
         "has_melody": true,
